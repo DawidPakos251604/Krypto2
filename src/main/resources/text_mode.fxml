@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.geometry.Insets?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="TextModeController"
+            prefWidth="400.0" prefHeight="400.0">
+    <VBox spacing="10.0" prefWidth="400.0">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+        <HBox spacing="10">
+            <Label text="Key size:"/>
+            <ComboBox fx:id="keySizeCombo" prefWidth="100"/>
+            <Button text="Generate Keys" onAction="#generateKeys"/>
+        </HBox>
+        <Label text="Message / Verification Input:"/>
+        <TextArea fx:id="inputArea" prefHeight="200"/>
+        <HBox spacing="10">
+            <Button text="Sign" onAction="#signMessage"/>
+            <Button text="Verify" onAction="#verifySignature"/>
+        </HBox>
+        <Label fx:id="resultLabel" text="Status will appear here"/>
+    </VBox>
+</AnchorPane>

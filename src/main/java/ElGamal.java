@@ -5,12 +5,19 @@ public class ElGamal {
 
     static SecureRandom random = new SecureRandom();
 
-    static class ElGamalKeyPair {
+    public static class ElGamalKeyPair {
         BigInteger p, g, a, h; // p, g, h - publiczne, a - prywatny
     }
 
-    static class ElGamalSignature {
+    public static class ElGamalSignature {
         BigInteger s1, s2;
+
+        public ElGamalSignature() {}
+
+        public ElGamalSignature(BigInteger s1, BigInteger s2) {
+            this.s1 = s1;
+            this.s2 = s2;
+        }
     }
 
     // Generowanie kluczy
