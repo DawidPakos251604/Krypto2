@@ -12,6 +12,9 @@
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
+
+        <Button text="Back" onAction="#goBack" layoutX="10" layoutY="10"/>
+
         <HBox spacing="10">
             <Label text="Key size:"/>
             <ComboBox fx:id="keySizeCombo" prefWidth="100"/>
@@ -24,5 +27,8 @@
             <Button text="Verify" onAction="#verifySignature"/>
         </HBox>
         <Label fx:id="resultLabel" text="Status will appear here"/>
+
+
+
     </VBox>
 </AnchorPane>

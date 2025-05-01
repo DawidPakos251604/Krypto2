@@ -10,11 +10,15 @@
             <Insets top="10" right="10" bottom="10" left="10"/>
         </padding>
 
+        <Button text="Back" onAction="#goBack" layoutX="10" layoutY="10"/>
+
         <TextField fx:id="filePathInput" promptText="File path..." editable="false" />
 
         <Button text="Load File" onAction="#loadFile"/>
         <Button text="Sign File" onAction="#signFile"/>
         <Button text="Verify Signature" onAction="#verifyFile"/>
+
+
 
     </VBox>
 </AnchorPane>

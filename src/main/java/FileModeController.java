@@ -1,10 +1,17 @@
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 import java.io.File;
+import java.io.IOException;
 import java.math.BigInteger;
 
 public class FileModeController {
@@ -75,4 +82,24 @@ public class FileModeController {
         alert.setContentText(msg);
         alert.showAndWait();
     }
+
+    @FXML
+    private void goBack(ActionEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mode_selection.fxml"));
+            AnchorPane root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Mode selection");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            Stage oldStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            oldStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
