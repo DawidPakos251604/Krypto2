@@ -1,34 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<?import javafx.geometry.Insets?>
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="TextModeController"
-            prefWidth="400.0" prefHeight="400.0">
-    <VBox spacing="10.0" prefWidth="400.0">
-        <padding>
-            <Insets top="10" right="10" bottom="10" left="10"/>
-        </padding>
+            prefWidth="450.0" prefHeight="600.0">
+    <VBox spacing="10.0" AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+        <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
 
         <Button text="Back" onAction="#goBack" layoutX="10" layoutY="10"/>
 
         <HBox spacing="10">
             <Label text="Key size:"/>
             <ComboBox fx:id="keySizeCombo" prefWidth="100"/>
-            <Button text="Generate Keys" onAction="#generateKeys"/>
+            <Button text="Generate keys" onAction="#generateKeys"/>
         </HBox>
-        <Label text="Message / Verification Input:"/>
-        <TextArea fx:id="inputArea" prefHeight="200"/>
+
+        <Label text="Message:"/>
+        <TextArea fx:id="inputArea" prefHeight="100"/>
+
+        <Label text="Signature:"/>
+        <HBox spacing="10">
+            <Label text="s1:"/>
+            <TextField fx:id="s1Field" prefWidth="180"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="s2:"/>
+            <TextField fx:id="s2Field" prefWidth="180"/>
+        </HBox>
+
+        <Label text="Public key:"/>
+        <HBox spacing="10">
+            <Label text="p:"/>
+            <TextField fx:id="pField" prefWidth="300"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="g:"/>
+            <TextField fx:id="gField" prefWidth="300"/>
+        </HBox>
+        <HBox spacing="10">
+            <Label text="h:"/>
+            <TextField fx:id="hField" prefWidth="300"/>
+        </HBox>
+
         <HBox spacing="10">
             <Button text="Sign" onAction="#signMessage"/>
             <Button text="Verify" onAction="#verifySignature"/>
         </HBox>
-        <Label fx:id="resultLabel" text="Status will appear here"/>
 
-
-
+        <Label fx:id="resultLabel" text="Result will be visible here"/>
     </VBox>
 </AnchorPane>

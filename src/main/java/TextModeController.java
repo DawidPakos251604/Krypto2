@@ -6,6 +6,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 public class TextModeController {
 
     @FXML private TextArea inputArea;
+    @FXML private TextField s1Field, s2Field, pField, gField, hField;
     @FXML private Label resultLabel;
     @FXML private ComboBox<String> keySizeCombo;
 
@@ -30,6 +32,11 @@ public class TextModeController {
     private void generateKeys() {
         int bitLength = Integer.parseInt(keySizeCombo.getValue());
         keys = ElGamal.generateKeys(bitLength);
+
+        pField.setText(keys.p.toString());
+        gField.setText(keys.g.toString());
+        hField.setText(keys.h.toString());
+
         resultLabel.setText("Keys generated with " + bitLength + " bits.");
     }
 
@@ -40,36 +47,45 @@ public class TextModeController {
             return;
         }
         String message = inputArea.getText();
+
+        if (message.isEmpty()) {
+            resultLabel.setText("Input message is empty.");
+            return;
+        }
+
         BigInteger msg = new BigInteger(message.getBytes());
 
         ElGamal.ElGamalSignature signature = ElGamal.sign(msg, keys);
-        resultLabel.setText("Signature:\nS1: " + signature.s1 + "\nS2: " + signature.s2);
 
-        inputArea.setText(message + "\n" + signature.s1 + "\n" + signature.s2);
+        s1Field.setText(signature.s1.toString());
+        s2Field.setText(signature.s2.toString());
+
+        resultLabel.setText("Signature generated.");
+
     }
 
     @FXML
     private void verifySignature() {
-        if (keys == null) {
-            resultLabel.setText("Generate keys first.");
+        if (inputArea.getText().isEmpty()) {
+            resultLabel.setText("Message is empty.");
             return;
         }
 
-        String[] lines = inputArea.getText().split("\n");
-        if (lines.length < 3) {
-            resultLabel.setText("Format: message\\nS1\\nS2");
-            return;
-        }
+        BigInteger message = new BigInteger(inputArea.getText().getBytes());
+        BigInteger s1 = new BigInteger(s1Field.getText().trim());
+        BigInteger s2 = new BigInteger(s2Field.getText().trim());
+        BigInteger p = new BigInteger(pField.getText().trim());
+        BigInteger g = new BigInteger(gField.getText().trim());
+        BigInteger h = new BigInteger(hField.getText().trim());
 
-        BigInteger message = new BigInteger(lines[0].getBytes());
-        BigInteger s1 = new BigInteger(lines[1]);
-        BigInteger s2 = new BigInteger(lines[2]);
+        ElGamal.ElGamalKeyPair publicKey = new ElGamal.ElGamalKeyPair();
+        publicKey.p = p;
+        publicKey.g = g;
+        publicKey.h = h;
 
-        ElGamal.ElGamalSignature signature = new ElGamal.ElGamalSignature();
-        signature.s1 = s1;
-        signature.s2 = s2;
+        ElGamal.ElGamalSignature signature = new ElGamal.ElGamalSignature(s1, s2);
 
-        boolean valid = ElGamal.verify(message, signature, keys);
+        boolean valid = ElGamal.verify(message, signature, publicKey);
         resultLabel.setText(valid ? "Signature is VALID" : "INVALID signature");
     }
 
