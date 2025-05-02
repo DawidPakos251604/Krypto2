@@ -75,6 +75,44 @@ public class FileModeController {
         }
     }
 
+    @FXML
+    private void savePublicKeyToFile() {
+        if (keys == null) {
+            showAlert(Alert.AlertType.WARNING, "No Key", "Generate or load a key first.");
+            return;
+        }
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save Public Key");
+        File file = fileChooser.showSaveDialog(null);
+
+        if (file != null) {
+            try {
+                FileSigner.savePublicKey(file.getAbsolutePath(), keys);
+                showAlert(Alert.AlertType.INFORMATION, "Saved", "Public key saved.");
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void loadPublicKeyFromFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open Public Key File");
+        File file = fileChooser.showOpenDialog(null);
+
+        if (file != null) {
+            try {
+                keys = FileSigner.loadPublicKey(file.getAbsolutePath());
+                showAlert(Alert.AlertType.INFORMATION, "Loaded", "Public key loaded.");
+            } catch (Exception e) {
+                showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+            }
+        }
+    }
+
+
     private void showAlert(Alert.AlertType type, String title, String msg) {
         Alert alert = new Alert(type);
         alert.setTitle(title);

@@ -2,9 +2,9 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-
 <?import javafx.geometry.Insets?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="FileModeController" prefWidth="400" prefHeight="300">
+
+<AnchorPane xmlns:fx="http://javafx.com/fxml" fx:controller="FileModeController" prefWidth="400" prefHeight="350">
     <VBox spacing="10.0" prefWidth="400.0">
         <padding>
             <Insets top="10" right="10" bottom="10" left="10"/>
@@ -18,7 +18,8 @@
         <Button text="Sign File" onAction="#signFile"/>
         <Button text="Verify Signature" onAction="#verifyFile"/>
 
-
+        <Button text="Save public key" onAction="#savePublicKeyToFile"/>
+        <Button text="Load public key" onAction="#loadPublicKeyFromFile"/>
 
     </VBox>
 </AnchorPane>

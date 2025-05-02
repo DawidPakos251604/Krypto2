@@ -21,4 +21,18 @@ public class FileSigner {
         String[] lines = new String(Files.readAllBytes(Paths.get(filePath))).split("\n");
         return new ElGamal.ElGamalSignature(new BigInteger(lines[0]), new BigInteger(lines[1]));
     }
+
+    public static void savePublicKey(String filePath, ElGamal.ElGamalKeyPair key) throws Exception {
+        String content = key.p.toString() + "\n" + key.g.toString() + "\n" + key.h.toString();
+        Files.write(Paths.get(filePath), content.getBytes());
+    }
+
+    public static ElGamal.ElGamalKeyPair loadPublicKey(String filePath) throws Exception {
+        String[] lines = new String(Files.readAllBytes(Paths.get(filePath))).split("\n");
+        ElGamal.ElGamalKeyPair key = new ElGamal.ElGamalKeyPair();
+        key.p = new BigInteger(lines[0]);
+        key.g = new BigInteger(lines[1]);
+        key.h = new BigInteger(lines[2]);
+        return key;
+    }
 }
