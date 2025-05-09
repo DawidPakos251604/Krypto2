@@ -88,7 +88,7 @@ public class FileModeController {
 
         if (file != null) {
             try {
-                FileSigner.savePublicKey(file.getAbsolutePath(), keys);
+                FileSigner.saveFullKey(file.getAbsolutePath(), keys);
                 showAlert(Alert.AlertType.INFORMATION, "Saved", "Public key saved.");
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
@@ -104,7 +104,7 @@ public class FileModeController {
 
         if (file != null) {
             try {
-                keys = FileSigner.loadPublicKey(file.getAbsolutePath());
+                keys = FileSigner.loadFullKey(file.getAbsolutePath());
                 showAlert(Alert.AlertType.INFORMATION, "Loaded", "Public key loaded.");
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());

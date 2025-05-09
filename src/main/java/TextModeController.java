@@ -16,7 +16,7 @@ import java.math.BigInteger;
 public class TextModeController {
 
     @FXML private TextArea inputArea;
-    @FXML private TextField s1Field, s2Field, pField, gField, hField;
+    @FXML private TextField s1Field, s2Field, pField, gField, hField, aField;
     @FXML private Label resultLabel;
     @FXML private ComboBox<String> keySizeCombo;
 
@@ -24,8 +24,9 @@ public class TextModeController {
 
     @FXML
     private void initialize() {
-        keySizeCombo.getItems().addAll("512", "1024", "2048");
+        keySizeCombo.getItems().addAll("512", "1024", "2048", "4096");
         keySizeCombo.setValue("1024");
+        hField.setEditable(false);
     }
 
     @FXML
@@ -33,35 +34,58 @@ public class TextModeController {
         int bitLength = Integer.parseInt(keySizeCombo.getValue());
         keys = ElGamal.generateKeys(bitLength);
 
-        pField.setText(keys.p.toString());
-        gField.setText(keys.g.toString());
-        hField.setText(keys.h.toString());
+        aField.setText(keys.a.toString(16));
+        pField.setText(keys.p.toString(16));
+        gField.setText(keys.g.toString(16));
+        hField.setText(keys.h.toString(16));
 
         resultLabel.setText("Keys generated with " + bitLength + " bits.");
     }
 
     @FXML
     private void signMessage() {
-        if (keys == null) {
-            resultLabel.setText("Generate keys first.");
-            return;
+        try {
+            BigInteger p = new BigInteger(pField.getText().trim(), 16);
+            BigInteger g = new BigInteger(gField.getText().trim(), 16);
+            BigInteger a = new BigInteger(aField.getText().trim(), 16);
+
+            if (inputArea.getText().isEmpty()) {
+                resultLabel.setText("Input message is empty.");
+                return;
+            }
+
+            BigInteger msg = new BigInteger(inputArea.getText().getBytes());
+
+            BigInteger h = g.modPow(a, p);
+            hField.setText(h.toString(16));
+
+            ElGamal.ElGamalKeyPair manualKey = new ElGamal.ElGamalKeyPair();
+            manualKey.p = p;
+
+            if (p.equals(BigInteger.TWO)) {
+                resultLabel.setText("p must be a large prime (not 2).");
+                return;
+            }
+
+            if (!Utils.isPrime(p)) {
+                resultLabel.setText("p is not a prime number.");
+                return;
+            }
+
+            manualKey.g = g;
+            manualKey.a = a;
+            manualKey.h = h;
+
+            ElGamal.ElGamalSignature signature = ElGamal.sign(msg, manualKey);
+
+            s1Field.setText(signature.s1.toString(16));
+            s2Field.setText(signature.s2.toString(16));
+
+            resultLabel.setText("Signature generated.");
+        } catch (Exception e) {
+            resultLabel.setText("Invalid input in fields.");
+            e.printStackTrace();
         }
-        String message = inputArea.getText();
-
-        if (message.isEmpty()) {
-            resultLabel.setText("Input message is empty.");
-            return;
-        }
-
-        BigInteger msg = new BigInteger(message.getBytes());
-
-        ElGamal.ElGamalSignature signature = ElGamal.sign(msg, keys);
-
-        s1Field.setText(signature.s1.toString());
-        s2Field.setText(signature.s2.toString());
-
-        resultLabel.setText("Signature generated.");
-
     }
 
     @FXML
@@ -72,14 +96,20 @@ public class TextModeController {
         }
 
         BigInteger message = new BigInteger(inputArea.getText().getBytes());
-        BigInteger s1 = new BigInteger(s1Field.getText().trim());
-        BigInteger s2 = new BigInteger(s2Field.getText().trim());
-        BigInteger p = new BigInteger(pField.getText().trim());
-        BigInteger g = new BigInteger(gField.getText().trim());
-        BigInteger h = new BigInteger(hField.getText().trim());
+        BigInteger s1 = new BigInteger(s1Field.getText().trim(), 16);
+        BigInteger s2 = new BigInteger(s2Field.getText().trim(), 16);
+        BigInteger p = new BigInteger(pField.getText().trim(), 16);
+        BigInteger g = new BigInteger(gField.getText().trim(), 16);
+        BigInteger h = new BigInteger(hField.getText().trim(), 16);
 
         ElGamal.ElGamalKeyPair publicKey = new ElGamal.ElGamalKeyPair();
         publicKey.p = p;
+
+        if (!Utils.isPrime(p)) {
+            resultLabel.setText("p is not a prime number.");
+            return;
+        }
+
         publicKey.g = g;
         publicKey.h = h;
 
@@ -107,5 +137,4 @@ public class TextModeController {
             e.printStackTrace();
         }
     }
-
 }

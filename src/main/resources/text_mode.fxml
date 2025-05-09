@@ -32,6 +32,13 @@
             <TextField fx:id="s2Field" prefWidth="180"/>
         </HBox>
 
+
+        <Label text="Private key:"/>
+        <HBox spacing="10">
+            <Label text="a:"/>
+            <TextField fx:id="aField" prefWidth="300"/>
+        </HBox>
+
         <Label text="Public key:"/>
         <HBox spacing="10">
             <Label text="p:"/>
