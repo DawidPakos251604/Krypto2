@@ -63,4 +63,5 @@ public class FileSignerTest {
 
         assertNotEquals(hash1, hash2);
     }
+
 }

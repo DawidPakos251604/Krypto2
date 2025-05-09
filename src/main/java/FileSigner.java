@@ -13,30 +13,37 @@ public class FileSigner {
     }
 
     public static void saveSignature(String filePath, ElGamal.ElGamalSignature signature) throws Exception {
-        String content = signature.s1.toString() + "\n" + signature.s2.toString();
+        String content = signature.s1.toString(16) + "\n" + signature.s2.toString(16);  // hex zapis
         Files.write(Paths.get(filePath), content.getBytes());
     }
 
     public static ElGamal.ElGamalSignature loadSignature(String filePath) throws Exception {
         String[] lines = new String(Files.readAllBytes(Paths.get(filePath))).split("\n");
-        return new ElGamal.ElGamalSignature(new BigInteger(lines[0]), new BigInteger(lines[1]));
+        return new ElGamal.ElGamalSignature(
+                new BigInteger(lines[0].trim(), 16),
+                new BigInteger(lines[1].trim(), 16)
+        );
     }
 
     public static void saveFullKey(String filePath, ElGamal.ElGamalKeyPair key) throws Exception {
-        String content = key.p.toString() + "\n"
-                + key.g.toString() + "\n"
-                + key.h.toString() + "\n"
-                + key.a.toString();
+        String content = key.p.toString(16) + "\n"
+                + key.g.toString(16) + "\n"
+                + key.h.toString(16) + "\n"
+                + (key.a != null ? key.a.toString(16) : "");
         Files.write(Paths.get(filePath), content.getBytes());
     }
+
 
     public static ElGamal.ElGamalKeyPair loadFullKey(String filePath) throws Exception {
         String[] lines = new String(Files.readAllBytes(Paths.get(filePath))).split("\n");
         ElGamal.ElGamalKeyPair key = new ElGamal.ElGamalKeyPair();
-        key.p = new BigInteger(lines[0]);
-        key.g = new BigInteger(lines[1]);
-        key.h = new BigInteger(lines[2]);
-            key.a = new BigInteger(lines[3]);
+        key.p = new BigInteger(lines[0].trim(), 16);
+        key.g = new BigInteger(lines[1].trim(), 16);
+        key.a = new BigInteger(lines[2].trim(), 16);
+        key.h = key.g.modPow(key.a, key.p);
+
         return key;
     }
+
+
 }

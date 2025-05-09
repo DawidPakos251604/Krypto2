@@ -19,7 +19,6 @@ public class Utils {
 
         for (int prime : SMALL_PRIMES) {
             if (p.equals(BigInteger.valueOf(prime))) {
-                System.out.println(p + " is a small prime.");
                 return true;
             }
         }

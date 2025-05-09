@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -17,10 +17,15 @@ import java.math.BigInteger;
 public class FileModeController {
 
     @FXML private TextField filePathInput;
-    @FXML private Button signButton;
-    @FXML private Button verifyButton;
     private String loadedFilePath;
     private ElGamal.ElGamalKeyPair keys;
+    @FXML private ComboBox<String> keySizeCombo;
+
+
+    @FXML private void initialize() {
+        keySizeCombo.getItems().addAll("512", "1024", "2048", "4096");
+        keySizeCombo.setValue("1024");
+    }
 
     @FXML
     private void loadFile() {
@@ -41,9 +46,13 @@ public class FileModeController {
             return;
         }
 
+        if (keys == null) {
+            int bitLength = Integer.parseInt(keySizeCombo.getValue());
+            keys = ElGamal.generateKeys(bitLength);
+        }
+
         try {
             BigInteger hash = FileSigner.hashFile(loadedFilePath);
-            keys = ElGamal.generateKeys(512);
             ElGamal.ElGamalSignature sig = ElGamal.sign(hash, keys);
 
             File out = new File(loadedFilePath + ".sig");
@@ -55,6 +64,7 @@ public class FileModeController {
             showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
         }
     }
+
 
     @FXML
     private void verifyFile() {
@@ -105,6 +115,18 @@ public class FileModeController {
         if (file != null) {
             try {
                 keys = FileSigner.loadFullKey(file.getAbsolutePath());
+
+                if (keys.p.equals(BigInteger.TWO)) {
+                    showAlert(Alert.AlertType.ERROR, "Invalid Key", "p must be a large prime (not 2).");
+                    return;
+                }
+
+                if (!Utils.isPrime(keys.p)) {
+                    showAlert(Alert.AlertType.ERROR, "Invalid Key", "p is not a prime number.");
+                    keys = null;
+                    return;
+                }
+
                 showAlert(Alert.AlertType.INFORMATION, "Loaded", "Public key loaded.");
             } catch (Exception e) {
                 showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());

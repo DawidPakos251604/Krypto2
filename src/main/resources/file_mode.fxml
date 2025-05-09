@@ -12,6 +12,11 @@
 
         <Button text="Back" onAction="#goBack" layoutX="10" layoutY="10"/>
 
+        <HBox spacing="10">
+            <Label text="Key size:"/>
+            <ComboBox fx:id="keySizeCombo" prefWidth="100"/>
+        </HBox>
+
         <TextField fx:id="filePathInput" promptText="File path..." editable="false" />
 
         <Button text="Load File" onAction="#loadFile"/>
