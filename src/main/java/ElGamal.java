@@ -20,19 +20,30 @@ public class ElGamal {
         }
     }
 
-    // Generowanie kluczy
+    /**
+     * Generates an ElGamal key pair.
+     *
+     * @param bitLength The bit length for the prime number p.
+     * @return The generated ElGamalKeyPair containing public and private keys.
+     */
     public static ElGamalKeyPair generateKeys(int bitLength) {
         ElGamalKeyPair keyPair = new ElGamalKeyPair();
 
         keyPair.p = BigInteger.probablePrime(bitLength, random);
         keyPair.g = new BigInteger(bitLength - 2, random).mod(keyPair.p.subtract(BigInteger.ONE)).add(BigInteger.TWO);
-
         keyPair.a = new BigInteger(bitLength - 2, random).mod(keyPair.p.subtract(BigInteger.TWO)).add(BigInteger.ONE);
         keyPair.h = keyPair.g.modPow(keyPair.a, keyPair.p);
 
         return keyPair;
     }
 
+    /**
+     * Generates a digital signature for a given message using the ElGamal signature scheme.
+     *
+     * @param message The message to be signed.
+     * @param keys The ElGamal key pair, where the private key is used for signing.
+     * @return The generated ElGamalSignature containing s1 and s2 components.
+     */
     public static ElGamalSignature sign(BigInteger message, ElGamalKeyPair keys) {
         BigInteger pMinus1 = keys.p.subtract(BigInteger.ONE);
         BigInteger r;
@@ -52,7 +63,14 @@ public class ElGamal {
         return signature;
     }
 
-    // Weryfikacja podpisu
+    /**
+     * Verifies the authenticity of a digital signature using the ElGamal verification algorithm.
+     *
+     * @param message The original message that was signed.
+     * @param signature The ElGamalSignature to be verified.
+     * @param keys The ElGamal key pair containing the public key (p, g, h).
+     * @return True if the signature is valid, false otherwise.
+     */
     public static boolean verify(BigInteger message, ElGamalSignature signature, ElGamalKeyPair keys) {
         BigInteger v1 = keys.h.modPow(signature.s1, keys.p)
                 .multiply(signature.s1.modPow(signature.s2, keys.p))

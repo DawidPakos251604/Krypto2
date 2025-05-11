@@ -26,7 +26,6 @@ public class TextModeController {
     private void initialize() {
         keySizeCombo.getItems().addAll("512", "1024", "2048", "4096");
         keySizeCombo.setValue("1024");
-        hField.setEditable(false);
     }
 
     @FXML
@@ -69,6 +68,18 @@ public class TextModeController {
 
             if (!Utils.isPrime(p)) {
                 resultLabel.setText("p is not a prime number.");
+                return;
+            }
+
+            // Sprawdzenie zakresu g: 1 < g < p - 1
+            if (g.compareTo(BigInteger.ONE) <= 0 || g.compareTo(p.subtract(BigInteger.ONE)) >= 0) {
+                resultLabel.setText("g must be > 1 and < p - 1.");
+                return;
+            }
+
+            // Sprawdzenie zakresu a: a < p - 1
+            if (a.compareTo(p.subtract(BigInteger.ONE)) >= 0) {
+                resultLabel.setText("a must be < p - 1.");
                 return;
             }
 
