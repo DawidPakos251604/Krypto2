@@ -30,7 +30,7 @@ public class ElGamal {
         ElGamalKeyPair keyPair = new ElGamalKeyPair();
 
         keyPair.p = BigInteger.probablePrime(bitLength, random);
-        keyPair.g = new BigInteger(bitLength - 2, random).mod(keyPair.p.subtract(BigInteger.ONE)).add(BigInteger.TWO);
+        keyPair.g = new BigInteger(bitLength - 2, random).mod(keyPair.p.subtract(BigInteger.valueOf(3))).add(BigInteger.TWO);
         keyPair.a = new BigInteger(bitLength - 2, random).mod(keyPair.p.subtract(BigInteger.TWO)).add(BigInteger.ONE);
         keyPair.h = keyPair.g.modPow(keyPair.a, keyPair.p);
 
